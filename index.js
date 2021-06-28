@@ -42,7 +42,6 @@ function grantRoleForSender(sender, role, successText) {
         console.log("PROBLEM: User not found among guild members");
         sender.send("Wystąpił problem #002 - Spróbuj ponownie lub skontaktuj się z osobą zarządzającą botem");
     } else {
-        console.log("Granting lama role");
         member
             .roles
             .add(role)
