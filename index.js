@@ -74,13 +74,16 @@ client.on('message', message => {
                 });
         }
     } else {
-        if(message.content.toLowerCase().includes("staszek kuca przy siku")) {
-            sender.send("Nieprawda :cry:")
-                .catch(err => console.log("ERROR while welcoming the user: " + err));
-        } else if(message.content.toLowerCase() === `${prefix}siema`) {
-            sender.send("Oł haj!")
-                .catch(err => console.log("ERROR while welcoming the user: " + err));
+        if(message.channel.name === process.env.BOT_CHANNEL_NAME) {
+            if(message.content.toLowerCase().includes("staszek kuca przy siku")) {
+                sender.send("Nieprawda :cry:")
+                    .catch(err => console.log("ERROR while welcoming the user: " + err));
+            } else if(message.content.toLowerCase() === `${prefix}siema`) {
+                sender.send("Oł haj!")
+                    .catch(err => console.log("ERROR while welcoming the user: " + err));
+            }
         }
+
     }
 });
 
