@@ -27,7 +27,7 @@ client.once('ready', () => {
     console.log('RoleBot is Ready to GO!');
 });
 
-/*
+/**
  * Grants user a certain role
  *
  * @param {Discord.User} sender - user who has just given bot the correct answer
@@ -75,10 +75,12 @@ client.on('message', message => {
         }
     } else {
         if(message.channel.name === process.env.BOT_CHANNEL_NAME) {
-            if(message.content.toLowerCase() === `${prefix}siema`) {
+            if(message.content.toLowerCase() === (prefix + process.env.SIEMA)) {
                 sender.send("Oł haj!")
                     .catch(err => console.log("ERROR while welcoming the user: " + err));
             }
+            message.delete()
+                .catch(err => console.log("ERROR while deleting the message from the channel: " + err));
         }
 
     }
