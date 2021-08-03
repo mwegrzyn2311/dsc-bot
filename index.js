@@ -89,7 +89,7 @@ client.on('message', message => {
             sender.send(process.env.QUERY3_ANSWER)
                 .catch(err => console.log("ERROR while answering a query: " + err));
         } else {
-            sender.send("*Ramm nie reaguje*")
+            sender.send("*Ramm nie reaguje.*")
                 .catch(err => {
                     // Well, I dunno why the bot is giving post error on each dm, so let's just ignore that error (that would hide serious console logs
                     if(err.toString() !== "DiscordAPIError: Cannot send messages to this user") {
