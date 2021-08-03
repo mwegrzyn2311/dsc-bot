@@ -9,6 +9,9 @@ let vipRole;
 
 let guildMembers;
 
+/**
+ * Bot init - once bot successfully logs in, all needed variables are set
+ */
 client.once('ready', () => {
     const guild = client.guilds.cache.get(process.env.SERVER_ID);
 
@@ -53,19 +56,40 @@ function grantRoleForSender(sender, role, successText) {
     }
 }
 
+/**
+ * Bot reaction for a new guild (server) member
+ */
+client.on('guildMemberAdd', member => {
+    member.send(process.env.WELCOME_MSG)
+        .catch(err => console.log("ERROR while greeting a new member: " + err));
+});
+
+/**
+ * Bot reaction for messages (in the server and DMs to him)
+ */
 client.on('message', message => {
 
     const sender = message.author
     if(message.channel.type === 'dm') {
+        const msg = message.content.toLowerCase();
         if(!guildMembers) {
             console.log("PROBLEM: Guild reference is Undefined");
             sender.send("Wystąpił problem #001 - Spróbuj ponownie lub skontaktuj się z osobą zarządzającą botem");
-        } else if(message.content === process.env.SERVER_ROLEPASSWORD) {
-            grantRoleForSender(sender, serverRole, "Od teraz możesz korzystać z Discordowego Serwera!");
-        } else if(message.content === process.env.VIP_ROLEPASSWORD) {
-            grantRoleForSender(sender, vipRole, "Od teraz masz dostęp do sekcji VIP!");
+        } else if(msg === process.env.SERVER_ROLEPASSWORD) {
+            grantRoleForSender(sender, serverRole, process.env.SERVER_ANSWER);
+        } else if(msg === process.env.VIP_ROLEPASSWORD) {
+            grantRoleForSender(sender, vipRole, process.env.VIP_ANSWER);
+        } else if(msg === process.env.QUERY1) {
+            sender.send(process.env.QUERY1_ANSWER)
+                .catch(err => console.log("ERROR while answering a query: " + err));
+        } else if(msg === process.env.QUERY2) {
+            sender.send(process.env.QUERY2_ANSWER)
+                .catch(err => console.log("ERROR while answering a query: " + err));
+        } else if(msg === process.env.QUERY3) {
+            sender.send(process.env.QUERY3_ANSWER)
+                .catch(err => console.log("ERROR while answering a query: " + err));
         } else {
-            sender.send("Hasło niepoprawne")
+            sender.send("*Ramm nie reaguje*")
                 .catch(err => {
                     // Well, I dunno why the bot is giving post error on each dm, so let's just ignore that error (that would hide serious console logs
                     if(err.toString() !== "DiscordAPIError: Cannot send messages to this user") {
@@ -73,16 +97,6 @@ client.on('message', message => {
                     }
                 });
         }
-    } else {
-        if(message.channel.name === process.env.BOT_CHANNEL_NAME) {
-            if(message.content.toLowerCase() === (prefix + process.env.SIEMA)) {
-                sender.send("Oł haj!")
-                    .catch(err => console.log("ERROR while welcoming the user: " + err));
-            }
-            message.delete()
-                .catch(err => console.log("ERROR while deleting the message from the channel: " + err));
-        }
-
     }
 });
 
