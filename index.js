@@ -47,7 +47,7 @@ function grantRoleForSender(sender, role, successText) {
         console.log("PROBLEM: User not found among guild members");
         sender.send("Wystąpił problem #002 - Spróbuj ponownie lub skontaktuj się z osobą zarządzającą botem")
             .catch(err => console.log("ERROR while giving ERROR #002: " + err));
-    } else if(member.roles.cache.contains(role)) {
+    } else if(member.roles.cache.find(alreadyGrantedRole => alreadyGrantedRole === role)) {
         sender.send(noReactionMsg)
             .catch(err => console.log("ERROR while sending no reaction msg to user: " + err));
     } else {
