@@ -9,6 +9,8 @@ let vipRole;
 
 let guildMembers;
 
+const noReactionMsg = "*Ramm nie reaguje.*";
+
 /**
  * Bot init - once bot successfully logs in, all needed variables are set
  */
@@ -45,6 +47,9 @@ function grantRoleForSender(sender, role, successText) {
         console.log("PROBLEM: User not found among guild members");
         sender.send("Wystąpił problem #002 - Spróbuj ponownie lub skontaktuj się z osobą zarządzającą botem")
             .catch(err => console.log("ERROR while giving ERROR #002: " + err));
+    } else if(member.roles.cache.contains(role)) {
+        sender.send(noReactionMsg)
+            .catch(err => console.log("ERROR while sending no reaction msg to user: " + err));
     } else {
         member
             .roles
@@ -95,11 +100,11 @@ client.on('message', message => {
             sender.send(process.env.QUERY3_ANSWER)
                 .catch(err => console.log("ERROR while answering a query: " + err));
         } else {
-            sender.send("*Ramm nie reaguje.*")
+            sender.send(noReactionMsg)
                 .catch(err => {
                     // Well, I dunno why the bot is giving post error on each dm, so let's just ignore that error (that would hide serious console logs
                     if(err.toString() !== "DiscordAPIError: Cannot send messages to this user") {
-                        console.log("ERROR while sending wrong password message to user: " + err);
+                        console.log("ERROR while sending no reaction msg to user: " + err);
                     }
                 });
         }
