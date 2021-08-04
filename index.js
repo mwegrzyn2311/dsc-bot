@@ -43,7 +43,8 @@ function grantRoleForSender(sender, role, successText) {
         .find(member => member.user === sender);
     if(!member) {
         console.log("PROBLEM: User not found among guild members");
-        sender.send("Wystąpił problem #002 - Spróbuj ponownie lub skontaktuj się z osobą zarządzającą botem");
+        sender.send("Wystąpił problem #002 - Spróbuj ponownie lub skontaktuj się z osobą zarządzającą botem")
+            .catch(err => console.log("ERROR while giving ERROR #002: " + err));
     } else {
         member
             .roles
@@ -51,7 +52,8 @@ function grantRoleForSender(sender, role, successText) {
             .then(sender.send(successText))
             .catch(err => {
                 console.log("ERROR while adding a role: " + err);
-                sender.send("Wystąpił problem #003 - Spróbuj ponownie lub skonsultuj się z osobą zarządzającą botem");
+                sender.send("Wystąpił problem #003 - Spróbuj ponownie lub skonsultuj się z osobą zarządzającą botem")
+                    .catch(err => console.log("ERROR while giving ERROR #003: " + err));
             });
     }
 }
@@ -74,9 +76,11 @@ client.on('message', message => {
         const msg = message.content.toLowerCase();
         if(!guildMembers) {
             console.log("PROBLEM: Guild reference is Undefined");
-            sender.send("Wystąpił problem #001 - Spróbuj ponownie lub skontaktuj się z osobą zarządzającą botem");
+            sender.send("Wystąpił problem #001 - Spróbuj ponownie lub skontaktuj się z osobą zarządzającą botem")
+                .catch(err => console.log("ERROR while giving ERROR #001: " + err));
         } else if(msg === process.env.SIEMA.toLowerCase()) {
-            sender.send(process.env.WELCOME_MSG);
+            sender.send(process.env.WELCOME_MSG)
+                .catch(err => console.log("ERROR while responding to SIEMA: " + err));
         } else if(msg === process.env.SERVER_ROLEPASSWORD.toLowerCase()) {
             grantRoleForSender(sender, serverRole, process.env.SERVER_ANSWER);
         } else if(msg === process.env.VIP_ROLEPASSWORD.toLowerCase()) {
