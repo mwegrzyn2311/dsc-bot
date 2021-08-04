@@ -75,17 +75,19 @@ client.on('message', message => {
         if(!guildMembers) {
             console.log("PROBLEM: Guild reference is Undefined");
             sender.send("Wystąpił problem #001 - Spróbuj ponownie lub skontaktuj się z osobą zarządzającą botem");
-        } else if(msg === process.env.SERVER_ROLEPASSWORD) {
+        } else if(msg === process.env.SIEMA.toLowerCase()) {
+            sender.send(process.env.WELCOME_MSG);
+        } else if(msg === process.env.SERVER_ROLEPASSWORD.toLowerCase()) {
             grantRoleForSender(sender, serverRole, process.env.SERVER_ANSWER);
-        } else if(msg === process.env.VIP_ROLEPASSWORD) {
+        } else if(msg === process.env.VIP_ROLEPASSWORD.toLowerCase()) {
             grantRoleForSender(sender, vipRole, process.env.VIP_ANSWER);
-        } else if(msg === process.env.QUERY1) {
+        } else if(msg === process.env.QUERY1.toLowerCase()) {
             sender.send(process.env.QUERY1_ANSWER)
                 .catch(err => console.log("ERROR while answering a query: " + err));
-        } else if(msg === process.env.QUERY2) {
+        } else if(msg === process.env.QUERY2.toLowerCase()) {
             sender.send(process.env.QUERY2_ANSWER)
                 .catch(err => console.log("ERROR while answering a query: " + err));
-        } else if(msg === process.env.QUERY3) {
+        } else if(msg === process.env.QUERY3.toLowerCase()) {
             sender.send(process.env.QUERY3_ANSWER)
                 .catch(err => console.log("ERROR while answering a query: " + err));
         } else {
