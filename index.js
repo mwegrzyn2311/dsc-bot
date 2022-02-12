@@ -45,11 +45,9 @@ function grantRoleForSender(sender, role, successText) {
         .find(member => member.user === sender);
     if(!member) {
         console.log("PROBLEM: User not found among guild members");
-        sender.send("Wystąpił problem #002 - Spróbuj ponownie lub skontaktuj się z osobą zarządzającą botem")
-            .catch(err => console.log("ERROR while giving ERROR #002: " + err));
+        sendAndHandle("Wystąpił problem #002 - Spróbuj ponownie lub skontaktuj się z osobą zarządzającą botem");
     } else if(member.roles.cache.find(alreadyGrantedRole => alreadyGrantedRole === role)) {
-        sender.send(noReactionMsg)
-            .catch(err => console.log("ERROR while sending no reaction msg to user: " + err));
+        sendAndHandle(noReactionMsg);
     } else {
         member
             .roles
@@ -57,8 +55,7 @@ function grantRoleForSender(sender, role, successText) {
             .then(sender.send(successText))
             .catch(err => {
                 console.log("ERROR while adding a role: " + err);
-                sender.send("Wystąpił problem #003 - Spróbuj ponownie lub skonsultuj się z osobą zarządzającą botem")
-                    .catch(err => console.log("ERROR while giving ERROR #003: " + err));
+                sendAndHandle("Wystąpił problem #003 - Spróbuj ponownie lub skonsultuj się z osobą zarządzającą botem");
             });
     }
 }
@@ -67,49 +64,47 @@ function grantRoleForSender(sender, role, successText) {
  * Bot reaction for a new guild (server) member
  */
 client.on('guildMemberAdd', member => {
-    member.send(process.env.WELCOME_MSG)
-        .catch(err => console.log("ERROR while greeting a new member: " + err));
+    sendAndHandle(process.env.WELCOME_MSG);
 });
 
 /**
  * Bot reaction for messages (in the server and DMs to him)
  */
 client.on('message', message => {
-
     const sender = message.author
+
+    if(sender.id === process.env.CLIENT_ID) {
+        // Don't handle your own messages
+        return;
+    }
+
     if(message.channel.type === 'dm') {
         const msg = message.content.toLowerCase();
         if(!guildMembers) {
             console.log("PROBLEM: Guild reference is Undefined");
-            sender.send("Wystąpił problem #001 - Spróbuj ponownie lub skontaktuj się z osobą zarządzającą botem")
-                .catch(err => console.log("ERROR while giving ERROR #001: " + err));
+            sendAndHandle("Wystąpił problem #001 - Spróbuj ponownie lub skontaktuj się z osobą zarządzającą botem");
         } else if(msg === process.env.SIEMA.toLowerCase()) {
-            sender.send(process.env.WELCOME_MSG)
-                .catch(err => console.log("ERROR while responding to SIEMA: " + err));
+            sendAndHandle(process.env.WELCOME_MSG);
         } else if(msg === process.env.SERVER_ROLEPASSWORD.toLowerCase()) {
             grantRoleForSender(sender, serverRole, process.env.SERVER_ANSWER);
         } else if(msg === process.env.VIP_ROLEPASSWORD.toLowerCase()) {
             grantRoleForSender(sender, vipRole, process.env.VIP_ANSWER);
         } else if(msg === process.env.QUERY1.toLowerCase()) {
-            sender.send(process.env.QUERY1_ANSWER)
-                .catch(err => console.log("ERROR while answering a query: " + err));
+            sendAndHandle(process.env.QUERY1_ANSWER);
         } else if(msg === process.env.QUERY2.toLowerCase()) {
-            sender.send(process.env.QUERY2_ANSWER)
-                .catch(err => console.log("ERROR while answering a query: " + err));
+            sendAndHandle(process.env.QUERY2_ANSWER);
         } else if(msg === process.env.QUERY3.toLowerCase()) {
-            sender.send(process.env.QUERY3_ANSWER)
-                .catch(err => console.log("ERROR while answering a query: " + err));
+            sendAndHandle(process.env.QUERY3_ANSWER);
         } else {
-            sender.send(noReactionMsg)
-                .catch(err => {
-                    // Well, I dunno why the bot is giving post error on each dm, so let's just ignore that error (that would hide serious console logs
-                    if(err.toString() !== "DiscordAPIError: Cannot send messages to this user") {
-                        console.log("ERROR while sending no reaction msg to user: " + err);
-                    }
-                });
+            sendAndHandle(noReactionMsg);
         }
     }
 });
+
+function sendAndHandle(sender, msg) {
+    sender.send(msg)
+        .catch(err => console.log("ERROR while sending msg: \"" + msg + "\". ERR: \"" + err + "\""));
+}
 
 client.login(process.env.TOKEN)
     .then(console.log("Client login successful"))
