@@ -103,7 +103,7 @@ client.on('message', message => {
 
 function sendAndHandle(sender, msg) {
     sender.send(msg)
-        .catch(err => console.log("ERROR while sending msg: \"" + msg + "\". ERR: \"" + err + "\". Sender: " + sender.id));
+        .catch(err => {console.log("ERROR while sending msg: \"" + msg + "\". ERR: \"" + err + "\""); console.log(sender);});
 }
 
 client.login(process.env.TOKEN)
