@@ -45,9 +45,9 @@ function grantRoleForSender(sender, role, successText) {
         .find(member => member.user === sender);
     if(!member) {
         console.log("PROBLEM: User not found among guild members");
-        sendAndHandle("Wystąpił problem #002 - Spróbuj ponownie lub skontaktuj się z osobą zarządzającą botem");
+        sendAndHandle(sender, "Wystąpił problem #002 - Spróbuj ponownie lub skontaktuj się z osobą zarządzającą botem");
     } else if(member.roles.cache.find(alreadyGrantedRole => alreadyGrantedRole === role)) {
-        sendAndHandle(noReactionMsg);
+        sendAndHandle(sender, noReactionMsg);
     } else {
         member
             .roles
@@ -55,7 +55,7 @@ function grantRoleForSender(sender, role, successText) {
             .then(sender.send(successText))
             .catch(err => {
                 console.log("ERROR while adding a role: " + err);
-                sendAndHandle("Wystąpił problem #003 - Spróbuj ponownie lub skonsultuj się z osobą zarządzającą botem");
+                sendAndHandle(sender, "Wystąpił problem #003 - Spróbuj ponownie lub skonsultuj się z osobą zarządzającą botem");
             });
     }
 }
@@ -64,7 +64,7 @@ function grantRoleForSender(sender, role, successText) {
  * Bot reaction for a new guild (server) member
  */
 client.on('guildMemberAdd', member => {
-    sendAndHandle(process.env.WELCOME_MSG);
+    sendAndHandle(member, process.env.WELCOME_MSG);
 });
 
 /**
@@ -82,21 +82,21 @@ client.on('message', message => {
         const msg = message.content.toLowerCase();
         if(!guildMembers) {
             console.log("PROBLEM: Guild reference is Undefined");
-            sendAndHandle("Wystąpił problem #001 - Spróbuj ponownie lub skontaktuj się z osobą zarządzającą botem");
+            sendAndHandle(sender, "Wystąpił problem #001 - Spróbuj ponownie lub skontaktuj się z osobą zarządzającą botem");
         } else if(msg === process.env.SIEMA.toLowerCase()) {
-            sendAndHandle(process.env.WELCOME_MSG);
+            sendAndHandle(sender, process.env.WELCOME_MSG);
         } else if(msg === process.env.SERVER_ROLEPASSWORD.toLowerCase()) {
             grantRoleForSender(sender, serverRole, process.env.SERVER_ANSWER);
         } else if(msg === process.env.VIP_ROLEPASSWORD.toLowerCase()) {
             grantRoleForSender(sender, vipRole, process.env.VIP_ANSWER);
         } else if(msg === process.env.QUERY1.toLowerCase()) {
-            sendAndHandle(process.env.QUERY1_ANSWER);
+            sendAndHandle(sender, process.env.QUERY1_ANSWER);
         } else if(msg === process.env.QUERY2.toLowerCase()) {
-            sendAndHandle(process.env.QUERY2_ANSWER);
+            sendAndHandle(sender, process.env.QUERY2_ANSWER);
         } else if(msg === process.env.QUERY3.toLowerCase()) {
-            sendAndHandle(process.env.QUERY3_ANSWER);
+            sendAndHandle(sender, process.env.QUERY3_ANSWER);
         } else {
-            sendAndHandle(noReactionMsg);
+            sendAndHandle(sender, noReactionMsg);
         }
     }
 });
