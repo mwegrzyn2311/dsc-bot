@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
-const { prefix } = require('./config.json');
+const {prefix} = require('./config.json');
 
 require('dotenv').config();
 
@@ -23,7 +23,7 @@ client.once('ready', () => {
     serverRole = roles.find(r => r.name === process.env.SERVER_ROLENAME);
     vipRole = roles.find(r => r.name === process.env.VIP_ROLENAME);
 
-    if(!guild) {
+    if (!guild) {
         console.log("FATAL ERROR: Guild not found!");
     } else {
         guildMembers = guild.members;
@@ -43,10 +43,10 @@ function grantRoleForSender(sender, role, successText) {
     const member = guildMembers
         .cache
         .find(member => member.user === sender);
-    if(!member) {
+    if (!member) {
         console.log("PROBLEM: User not found among guild members");
         sendAndHandle(sender, "Wystąpił problem #002 - Spróbuj ponownie lub skontaktuj się z osobą zarządzającą botem");
-    } else if(member.roles.cache.find(alreadyGrantedRole => alreadyGrantedRole === role)) {
+    } else if (member.roles.cache.find(alreadyGrantedRole => alreadyGrantedRole === role)) {
         sendAndHandle(sender, noReactionMsg);
     } else {
         member
@@ -73,27 +73,29 @@ client.on('guildMemberAdd', member => {
 client.on('message', message => {
     const sender = message.author
 
-    if(sender.id === process.env.CLIENT_ID) {
+    if (sender.id === process.env.CLIENT_ID) {
         // Don't handle your own messages
         return;
     }
 
-    if(message.channel.type === 'dm') {
+    if (message.channel.type === 'dm') {
         const msg = message.content.toLowerCase();
-        if(!guildMembers) {
+        if (!guildMembers) {
             console.log("PROBLEM: Guild reference is Undefined");
             sendAndHandle(sender, "Wystąpił problem #001 - Spróbuj ponownie lub skontaktuj się z osobą zarządzającą botem");
-        } else if(msg === process.env.SIEMA.toLowerCase()) {
+        } else if (msg === "") {
+            sendAndHandle(sender, noReactionMsg);
+        } else if (msg === process.env.SIEMA.toLowerCase()) {
             sendAndHandle(sender, process.env.WELCOME_MSG);
-        } else if(msg === process.env.SERVER_ROLEPASSWORD.toLowerCase()) {
+        } else if (msg === process.env.SERVER_ROLEPASSWORD.toLowerCase()) {
             grantRoleForSender(sender, serverRole, process.env.SERVER_ANSWER);
-        } else if(msg === process.env.VIP_ROLEPASSWORD.toLowerCase()) {
+        } else if (msg === process.env.VIP_ROLEPASSWORD.toLowerCase()) {
             grantRoleForSender(sender, vipRole, process.env.VIP_ANSWER);
-        } else if(msg === process.env.QUERY1.toLowerCase()) {
+        } else if (msg === process.env.QUERY1.toLowerCase()) {
             sendAndHandle(sender, process.env.QUERY1_ANSWER);
-        } else if(msg === process.env.QUERY2.toLowerCase()) {
+        } else if (msg === process.env.QUERY2.toLowerCase()) {
             sendAndHandle(sender, process.env.QUERY2_ANSWER);
-        } else if(msg === process.env.QUERY3.toLowerCase()) {
+        } else if (msg === process.env.QUERY3.toLowerCase()) {
             sendAndHandle(sender, process.env.QUERY3_ANSWER);
         } else {
             sendAndHandle(sender, noReactionMsg);
