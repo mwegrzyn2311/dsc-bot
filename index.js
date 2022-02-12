@@ -73,7 +73,7 @@ client.on('guildMemberAdd', member => {
 client.on('message', message => {
     const sender = message.author
 
-    if (sender.id === process.env.CLIENT_ID) {
+    if (sender.id === client.user.id) {
         // Don't handle your own messages
         return;
     }
@@ -103,7 +103,7 @@ client.on('message', message => {
 
 function sendAndHandle(sender, msg) {
     sender.send(msg)
-        .catch(err => {console.log("ERROR while sending msg: \"" + msg + "\". ERR: \"" + err + "\""); console.log(sender);});
+        .catch(err => console.log("ERROR while sending msg: \"" + msg + "\". ERR: \"" + err + "\""));
 }
 
 client.login(process.env.TOKEN)
