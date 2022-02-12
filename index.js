@@ -1,6 +1,5 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
-const {prefix} = require('./config.json');
 
 require('dotenv').config();
 
