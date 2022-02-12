@@ -82,6 +82,9 @@ client.on('message', message => {
         if (!guildMembers) {
             console.log("PROBLEM: Guild reference is Undefined");
             sendAndHandle(sender, "Wystąpił problem #001 - Spróbuj ponownie lub skontaktuj się z osobą zarządzającą botem");
+        } else if (msg === "") {
+            // Don't handle empty msg (for example only image/file
+            sendAndHandle(sender, noReactionMsg);
         } else if (msg === process.env.SIEMA.toLowerCase()) {
             sendAndHandle(sender, process.env.WELCOME_MSG);
         } else if (msg === process.env.SERVER_ROLEPASSWORD.toLowerCase()) {
